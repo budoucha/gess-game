@@ -416,21 +416,58 @@ boardEl.addEventListener('click', e => {
   if (!cell) return;
   onCellClick(+cell.dataset.i, +cell.dataset.j);
 });
-document.getElementById('newBtn').addEventListener('click', () => { if (G.mode === 'tutorial') exitTutorial(); newGame(); });
 document.getElementById('undoBtn').addEventListener('click', undo);
-
-document.getElementById('modeSel').addEventListener('change', applyControls);
-document.getElementById('colorSel').addEventListener('change', applyControls);
-document.getElementById('diffSel').addEventListener('change', applyControls);
 document.getElementById('tutorialBtn').addEventListener('click', () => startTutorial());
 
-function applyControls() {
+// 「新しい対局」ボタン: モード選択パネルを表示(対局はまだ始めない)
+document.getElementById('newBtn').addEventListener('click', () => {
+  if (G.mode === 'tutorial') exitTutorial();
+  showModePicker(false);
+});
+
+// モード選択時: CPU設定の表示切替のみ(対局は開始しない)
+document.getElementById('modeSel').addEventListener('change', updateCpuOptsVisibility);
+
+// 「対局開始」ボタン: 選択中の設定で newGame
+document.getElementById('startGameBtn').addEventListener('click', () => {
   G.mode = document.getElementById('modeSel').value;
-  G.aiColor = document.getElementById('colorSel').value === 'B' ? 'W' : 'B'; // 人間の色を選ぶ → AIは逆
+  G.aiColor = document.getElementById('colorSel').value === 'B' ? 'W' : 'B';
   G.difficulty = document.getElementById('diffSel').value;
-  document.getElementById('cpuOpts').classList.toggle('hidden', G.mode !== 'cpu');
+  hideModePicker();
   newGame();
+});
+
+// 「キャンセル」: 進行中の対局へ戻る(初回起動時は表示されない)
+document.getElementById('cancelModeBtn').addEventListener('click', hideModePicker);
+
+function updateCpuOptsVisibility() {
+  const m = document.getElementById('modeSel').value;
+  document.getElementById('cpuOpts').classList.toggle('hidden', m !== 'cpu');
 }
 
-// 起動
-applyControls();
+function showModePicker(initial) {
+  updateCpuOptsVisibility();
+  document.getElementById('modePicker').classList.remove('hidden');
+  // 初回起動時(まだ対局が無い)は「キャンセル」を隠す
+  document.getElementById('cancelModeBtn').classList.toggle('hidden', !!initial);
+  document.getElementById('newBtn').disabled = true;
+  document.getElementById('undoBtn').disabled = true;
+  G.lock = true;  // 盤クリックを無効化
+}
+
+function hideModePicker() {
+  document.getElementById('modePicker').classList.add('hidden');
+  document.getElementById('newBtn').disabled = false;
+  G.lock = false;
+  render();
+}
+
+// 起動: 初期盤面を描画してからモード選択パネルを開く
+G.board = setupBoard();
+G.current = 'B';
+G.mode = 'pvp';
+G.aiColor = 'W';
+G.difficulty = 'normal';
+G.captures = { B: 0, W: 0 };
+render();
+showModePicker(true);

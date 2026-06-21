@@ -140,6 +140,8 @@ details ul { padding-left: 18px; margin: 6px 0; }
 .tutorial .progress i { height: 5px; flex: 1; border-radius: 3px; background: #3a4250; }
 .tutorial .progress i.on { background: var(--accent); }
 .hidden { display: none !important; }
+.picker-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: 0.5px; }
+#modePicker { border: 1px solid var(--accent); }
 
 /* ---- コーチマーク(吹き出し) ---- */
 .coach {

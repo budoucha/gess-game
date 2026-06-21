@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gess — 囲碁とチェスのハイブリッド</title>
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <div class="wrap">
@@ -24,15 +24,16 @@
     <div class="stat">白の捕獲数 <b id="capW">0</b></div>
     <div id="banner" class="banner"></div>
 
-    <div class="controls">
+    <div id="modePicker" class="controls hidden">
+      <div class="picker-title">対局設定</div>
       <div class="row">
         <label>モード</label>
         <select id="modeSel">
+          <option value="cpu" selected>CPUと対戦</option>
           <option value="pvp">2人で対戦</option>
-          <option value="cpu">CPUと対戦</option>
         </select>
       </div>
-      <div id="cpuOpts" class="hidden">
+      <div id="cpuOpts">
         <div class="row">
           <label>あなた</label>
           <select id="colorSel">
@@ -48,6 +49,10 @@
             <option value="hard">強い</option>
           </select>
         </div>
+      </div>
+      <div class="btns">
+        <button id="startGameBtn" class="primary">対局開始</button>
+        <button id="cancelModeBtn">キャンセル</button>
       </div>
     </div>
 
@@ -114,8 +119,8 @@
   </p>
 </footer>
 
-<script src="game.js?v=16"></script>
-<script src="ai.js?v=16"></script>
-<script src="tutorial.js?v=16"></script>
+<script src="game.js?v=18"></script>
+<script src="ai.js?v=18"></script>
+<script src="tutorial.js?v=18"></script>
 </body>
 </html>
