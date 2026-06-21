@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gess — 囲碁とチェスのハイブリッド</title>
+<link rel="stylesheet" href="style.css?v=17">
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Gess</h1>
+    <div class="subtitle">囲碁盤で遊ぶチェス系アブストラクト・ゲーム</div>
+    <div class="board-area">
+      <div id="board" class="board"></div>
+      <div id="thinking" class="thinking"><span>CPU 思考中…</span></div>
+    </div>
+  </div>
+
+  <!-- 通常パネル -->
+  <div id="mainPanel" class="panel">
+    <div class="turn">手番: <span id="turnChip" class="chip B"></span><span id="turnText">黒</span></div>
+    <div class="stat">黒の捕獲数 <b id="capB">0</b></div>
+    <div class="stat">白の捕獲数 <b id="capW">0</b></div>
+    <div id="banner" class="banner"></div>
+
+    <div class="controls">
+      <div class="row">
+        <label>モード</label>
+        <select id="modeSel">
+          <option value="pvp">2人で対戦</option>
+          <option value="cpu">CPUと対戦</option>
+        </select>
+      </div>
+      <div id="cpuOpts" class="hidden">
+        <div class="row">
+          <label>あなた</label>
+          <select id="colorSel">
+            <option value="B">黒（先手）</option>
+            <option value="W">白（後手）</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>強さ</label>
+          <select id="diffSel">
+            <option value="easy">弱い</option>
+            <option value="normal" selected>普通</option>
+            <option value="hard">強い</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button id="undoBtn">手を戻す</button>
+      <button id="newBtn" class="primary">新しい対局</button>
+    </div>
+    <div class="btns">
+      <button id="tutorialBtn">▶ チュートリアルを始める</button>
+    </div>
+
+    <div class="legend"><span class="sw move"></span>移動できるマス（中心）</div>
+    <div class="legend"><span class="sw cap"></span>捕獲を伴う着手</div>
+
+    <details>
+      <summary>ルール</summary>
+      <ul>
+        <li><b>駒</b>＝盤上の任意の3×3領域。中の石は<b>自分の色だけ</b>で、中央の周囲8マスに最低1個。</li>
+        <li><b>方向</b>：中央周囲8マスのうち石がある方向にだけ動ける。</li>
+        <li><b>距離</b>：中央に石があれば<b>無制限</b>、中央が空なら<b>最大3マス</b>。</li>
+        <li>進路上で他の石（自他問わず）に3×3が重なると<b>停止＆捕獲</b>。</li>
+        <li>盤外にはみ出した自分の石は<b>消滅</b>。</li>
+        <li>手番終了時に<b>自分のリングが無いと負け</b>（双方無しなら動かした側の負け）。UIでは事故防止のため、自分のリングを崩す手は青丸を出しません。</li>
+        <li><b>リング</b>を全て失った側が負け。</li>
+      </ul>
+    </details>
+  </div>
+
+  <!-- チュートリアルパネル -->
+  <div id="tutorialPanel" class="panel tutorial hidden">
+    <div class="tstep" id="tStepNum">ステップ 1 / 13</div>
+    <h2 id="tTitle">タイトル</h2>
+    <div class="progress" id="tProgress"></div>
+    <div class="ttext" id="tText"></div>
+    <div class="tgoal" id="tGoal"></div>
+    <div class="btns">
+      <button id="tPrev">← 戻る</button>
+      <button id="tNext" class="primary">次へ →</button>
+      <button id="tFinish" class="primary hidden">対局を始める</button>
+    </div>
+    <div class="btns">
+      <button id="tQuit">チュートリアルをやめる</button>
+    </div>
+    <div class="legend"><span class="sw move"></span>移動できるマス（中心）</div>
+    <div class="legend"><span class="sw cap"></span>捕獲を伴う着手</div>
+  </div>
+</div>
+
+<div id="coachLayer"></div>
+
+<footer class="about">
+  <h2>Gess について</h2>
+  <p>
+    Gess（ゲス）は、囲碁盤と碁石を使って遊ぶ<strong>チェス系のアブストラクト・ゲーム</strong>です。
+    駒は最初から決まっているのではなく、盤上の任意の 3×3 領域に置かれた自分の石の<strong>配置そのもの</strong>を一つの駒として扱い、
+    その中に石がある方向へ動かして相手の石を捕獲します。「リング」と呼ばれる中央が空いた石の形を全て失った側が負けです。
+  </p>
+  <p>
+    1994 年に英ケンブリッジ大学の数学愛好者団体 <em>The Archimedeans</em> が発行する雑誌
+    <em>Eureka</em> 第 53 号で発表されたのが始まりとされ、名前は <strong>Go + Chess</strong> に由来します。
+    詳しい歴史やルールのバリエーションは
+    <a href="https://en.wikipedia.org/wiki/Gess" target="_blank" rel="noopener noreferrer">Wikipedia の Gess の項目</a>
+    を参照してください。
+  </p>
+</footer>
+
+<script src="game.js?v=16"></script>
+<script src="ai.js?v=16"></script>
+<script src="tutorial.js?v=16"></script>
+</body>
+</html>
