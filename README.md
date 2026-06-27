@@ -1,20 +1,22 @@
 # Gess
 
-[Wikipedia の Gess](https://en.wikipedia.org/wiki/Gess) を元にした、ブラウザで遊べる実装です。
+[Gess](https://en.wikipedia.org/wiki/Gess) をブラウザで遊べるようにした実装です。
 囲碁盤（18×18マス）の上で、チェスのように駒を動かして相手の「リング」を全滅させると勝ちます。
 
 **▶ [ブラウザで遊ぶ](https://budoucha.github.io/gess-game/)**
 
 依存ライブラリ・ビルド・サーバー不要。HTML/CSS/JavaScript のみで動く静的サイトです。
 
+現代のブラウザで手軽に遊べる Gess のプレイアブルな環境がほとんど見当たらなかったため、ルール確認・学習・対局をすぐ試せる場所として作りました。
+
 ## 遊び方
 
 ローカルで動かす場合は `index.html` をブラウザで開くだけ。
 
 - 動かしたい **3×3の領域（駒）** の中心をクリックして選択
-- 青い点（着手可能な中心位置）をクリックして移動。赤いリングは捕獲を伴う着手
+- 青い点（着手可能な中心位置）をクリックして移動。赤い円枠は捕獲を伴う着手
 - 同じ中心をもう一度クリックで選択解除
-- 「手を戻す」で戻す / 「新しい対局」で初期化
+- 「手を戻す」で戻す / 「新しい対局」で対局設定を開き、「対局開始」で初期化
 
 ### モード
 
@@ -42,8 +44,8 @@
 
 ソース間で裁定が割れるエッジケースについて、本実装は以下の方針を採用しています。
 
-- **正典**: [Wikipedia: Gess](https://en.wikipedia.org/wiki/Gess) の本文。
-- **エンジン（ルール層）**: 正典どおり。自分のリングを壊す手も「合法」で、リングの有無は**手番終了時の勝敗としてのみ**評価する。双方が同時にリングを失った場合は**動かした側の負け**。
+- **参照ルール**: [Wikipedia: Gess](https://en.wikipedia.org/wiki/Gess) の本文。
+- **エンジン（ルール層）**: 参照ルールどおり。自分のリングを壊す手も「合法」で、リングの有無は**手番終了時の勝敗としてのみ**評価する。双方が同時にリングを失った場合は**動かした側の負け**。
 - **UI（表示層）**: 事故防止のため、自分のリングを崩す手は青丸を出さず選べない（ルール上の合法性は変えていない）。どの駒を選んでもリングを守れる手が無い zugzwang 局面では、その手番の前にバナーで通知し対局終了。
 - **CPU**: 自リング喪失手は負け手として回避する。
 
@@ -81,7 +83,9 @@ Wikipedia の[開始配置写真](https://en.wikipedia.org/wiki/Gess#/media/File
 
 ## クレジット
 
-ゲーム「Gess」は 1994年、[The Archimedeans](https://en.wikipedia.org/wiki/The_Archimedeans)（ケンブリッジ大学数学愛好会）の Puzzles and Games Ring によって考案され、同会の機関誌 _Eureka_ 53号で発表されました。同年11月の _Scientific American_ 誌、Ian Stewart の "Mathematical Recreations" 欄で広く紹介されたゲームです。本リポジトリは原案に基づく**独立したオープン再実装**であり、原案者・既存実装とは無関係です。
+ゲーム「Gess」は 1994年、[The Archimedeans](https://en.wikipedia.org/wiki/The_Archimedeans)（ケンブリッジ大学数学愛好会）の Puzzles and Games Ring によって考案され、同会の機関誌 _Eureka_ 53号で発表されました。同年11月の _Scientific American_ 誌、Ian Stewart の "Mathematical Recreations" 欄で広く紹介されたゲームです。
+
+本実装のルール説明と裁定は [Wikipedia: Gess](https://en.wikipedia.org/wiki/Gess) の記述を参考にしています。本リポジトリは原案に基づく**独立したオープン再実装**であり、原案者・既存実装・Wikipedia とは無関係です。
 
 ## ライセンス
 
