@@ -399,6 +399,8 @@ function render() {
     html += `<div class="frame3${f.bad ? ' bad' : ''}${f.cls ? ' ' + f.cls : ''}" style="left:calc((${f.j} - 2) * var(--cell)); top:calc((19 - ${f.i}) * var(--cell)); width:calc(3 * var(--cell)); height:calc(3 * var(--cell));"></div>`;
   }
   boardEl.innerHTML = html;
+  boardEl.appendChild(hoverFrameEl);
+  updateHoverFrame();
 
   document.getElementById('turnChip').className = "chip " + G.current;
   let turnLabel = colorName(G.current);
@@ -409,6 +411,49 @@ function render() {
   document.getElementById('capW').textContent = G.captures.W;
   document.getElementById('undoBtn').disabled = G.history.length === 0 || G.aiThinking;
 }
+
+/* ---- ホバー時の3×3駒範囲ガイド ---- */
+const hoverFrameEl = document.createElement('div');
+hoverFrameEl.className = 'frame3 frame3-hover hidden';
+hoverFrameEl.style.width = 'calc(3 * var(--cell))';
+hoverFrameEl.style.height = 'calc(3 * var(--cell))';
+let hoverCell = null;
+
+function hoverFrameSuppressed() {
+  return G.mode === 'tutorial' || G.gameOver || G.aiThinking || G.lock || aiTurnNow();
+}
+
+function updateHoverFrame() {
+  if (!hoverCell || hoverFrameSuppressed()) {
+    hoverFrameEl.classList.add('hidden');
+    return;
+  }
+  const { i, j } = hoverCell;
+  hoverFrameEl.style.left = `calc((${j} - 2) * var(--cell))`;
+  hoverFrameEl.style.top = `calc((19 - ${i}) * var(--cell))`;
+  let valid;
+  if (G.selected) {
+    valid = (i === G.selected.i && j === G.selected.j) ||
+            G.legalMoves.some(m => m.i === i && m.j === j);
+  } else {
+    valid = analyze(G.board, i, j, G.current).valid;
+  }
+  hoverFrameEl.classList.toggle('bad', !valid);
+  hoverFrameEl.classList.remove('hidden');
+}
+
+boardEl.addEventListener('mousemove', e => {
+  const cell = e.target.closest('.cell');
+  if (!cell) return;
+  const i = +cell.dataset.i, j = +cell.dataset.j;
+  if (hoverCell && hoverCell.i === i && hoverCell.j === j) return;
+  hoverCell = { i, j };
+  updateHoverFrame();
+});
+boardEl.addEventListener('mouseleave', () => {
+  hoverCell = null;
+  updateHoverFrame();
+});
 
 /* ---- 入力配線 ---- */
 boardEl.addEventListener('click', e => {
