@@ -817,5 +817,5 @@ function softRetry() {
 
 document.getElementById('tPrev').addEventListener('click', () => { if (TS.step > 0) showStep(TS.step - 1); });
 document.getElementById('tNext').addEventListener('click', () => { if (TS.step < TUTORIAL.length - 1) showStep(TS.step + 1); });
-document.getElementById('tFinish').addEventListener('click', () => { exitTutorial(); applyControls(); });
-document.getElementById('tQuit').addEventListener('click', () => { exitTutorial(); applyControls(); });
+document.getElementById('tFinish').addEventListener('click', () => { exitTutorial(); showModePicker(true); });
+document.getElementById('tQuit').addEventListener('click', () => { exitTutorial(); showModePicker(true); });
